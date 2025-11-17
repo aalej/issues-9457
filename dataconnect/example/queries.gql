@@ -1,0 +1,7 @@
+query ListEverything @auth(level: PUBLIC) {
+    items {
+        id,
+        name,
+        description
+    }
+}
