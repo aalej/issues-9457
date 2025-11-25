@@ -1,3 +1,13 @@
-mutation CreateItem($name: String!, $description: String) @auth(level: PUBLIC) {
-  item_insert(data: { name: $name, description: $description })
+mutation CreateItem(
+  $name: String!
+  $description: String
+  $creationTime: Timestamp!
+) @auth(level: PUBLIC) {
+  item_insert(
+    data: {
+      name: $name
+      description: $description
+      creationTime: $creationTime
+    }
+  )
 }

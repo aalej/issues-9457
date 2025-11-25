@@ -73,6 +73,7 @@ DataConnect.defaultConnector.listEverythingQuery.execute(...)
 ```swift
 
 let name: String = ...
+let creationTime: Timestamp = ...
 ```
  
 

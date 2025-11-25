@@ -4,17 +4,20 @@ import FirebaseDataConnect
 import DataConnectGenerated
 
 struct Item: Identifiable, Hashable {
-  var id: UUID
-  var name: String
-  var description: String?
-
-  init(id: UUID = UUID(),
-       name: String,
-       description: String? = nil) {
-    self.id = id
-    self.name = name
-    self.description = description
-  }
+    var id: UUID
+    var name: String
+    var description: String?
+    var creationTime: Timestamp
+    
+    init(id: UUID = UUID(),
+         name: String,
+         creationTime: Timestamp,
+         description: String? = nil) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.creationTime = creationTime
+    }
 }
 
 @main
@@ -51,7 +54,8 @@ struct test_9457App: App {
                     Button(action: {
                         Task {
                             _ = try await DataConnect.defaultConnector
-                                .createItemMutation.execute(name: itemName) { variables in
+                                .createItemMutation.execute(name: itemName, creationTime: Timestamp(date: Date())
+                                ) { variables in
                                     variables.description = itemDescription
                                 }
                             isShowingItemAddedAlert = true
@@ -70,7 +74,8 @@ struct test_9457App: App {
                                 let id: UUID = item.id
                                 let name = item.name
                                 let description = item.description
-                                return Item(id: id, name: name, description: description)
+                                let creationTime = item.creationTime
+                                return Item(id: id, name: name, creationTime: creationTime, description: description)
                             }
                         }
                     }, label: {
@@ -89,6 +94,9 @@ struct test_9457App: App {
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
+                            Text(formatTimestamp(item.creationTime))
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
                         }
                     }
                 }
@@ -100,5 +108,12 @@ struct test_9457App: App {
             
             
         }
+        
+    }
+    
+    func formatTimestamp(_ timestamp: Timestamp) -> String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return dateformatter.string(from: Date(timeIntervalSince1970: TimeInterval(timestamp.seconds)))
     }
 }

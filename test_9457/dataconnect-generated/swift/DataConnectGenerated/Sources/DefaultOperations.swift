@@ -72,6 +72,11 @@ name: String
         public var
 description: String?
 
+  
+        
+        public var
+creationTime: Timestamp
+
 
     
     
@@ -79,6 +84,9 @@ description: String?
     public init (
         
 name: String
+,
+        
+creationTime: Timestamp
 
         
         
@@ -86,6 +94,7 @@ name: String
         _ optionalVars: ((inout Variables)->())? = nil
         ) {
         self.name = name
+        self.creationTime = creationTime
         
 
         
@@ -98,7 +107,8 @@ name: String
     public static func == (lhs: Variables, rhs: Variables) -> Bool {
       
         return lhs.name == rhs.name && 
-              lhs.description == rhs.description
+              lhs.description == rhs.description && 
+              lhs.creationTime == rhs.creationTime
               
     }
 
@@ -109,6 +119,8 @@ public func hash(into hasher: inout Hasher) {
   
   hasher.combine(description)
   
+  hasher.combine(creationTime)
+  
 }
 
     enum CodingKeys: String, CodingKey {
@@ -116,6 +128,8 @@ public func hash(into hasher: inout Hasher) {
       case name
       
       case description
+      
+      case creationTime
       
     }
 
@@ -130,6 +144,10 @@ public func hash(into hasher: inout Hasher) {
       if $description.isSet { 
       try codecHelper.encode(description, forKey: .description, container: &container)
       }
+      
+      
+      try codecHelper.encode(creationTime, forKey: .creationTime, container: &container)
+      
       
     }
 
@@ -147,12 +165,14 @@ item_insert: ItemKey
   public func ref(
         
 name: String
+,
+creationTime: Timestamp
 
         
         ,
         _ optionalVars: ((inout CreateItemMutation.Variables)->())? = nil
         ) -> MutationRef<CreateItemMutation.Data,CreateItemMutation.Variables>  {
-        var variables = CreateItemMutation.Variables(name:name)
+        var variables = CreateItemMutation.Variables(name:name,creationTime:creationTime)
         
         if let optionalVars {
             optionalVars(&variables)
@@ -167,12 +187,14 @@ name: String
    public func execute(
         
 name: String
+,
+creationTime: Timestamp
 
         
         ,
         _ optionalVars: (@MainActor (inout CreateItemMutation.Variables)->())? = nil
         ) async throws -> OperationResult<CreateItemMutation.Data> {
-        var variables = CreateItemMutation.Variables(name:name)
+        var variables = CreateItemMutation.Variables(name:name,creationTime:creationTime)
         
         if let optionalVars {
             optionalVars(&variables)
@@ -232,11 +254,16 @@ public var
 description: String?
 
 
+
+public var 
+creationTime: Timestamp
+
+
   
   public var itemKey: ItemKey {
     return ItemKey(
       
-      id: id
+      id: id,creationTime: creationTime
     )
   }
 
@@ -245,10 +272,13 @@ public func hash(into hasher: inout Hasher) {
   
   hasher.combine(id)
   
+  hasher.combine(creationTime)
+  
 }
 public static func == (lhs: Item, rhs: Item) -> Bool {
     
-    return lhs.id == rhs.id 
+    return lhs.id == rhs.id  && 
+        lhs.creationTime == rhs.creationTime 
         
   }
 
@@ -262,6 +292,8 @@ public static func == (lhs: Item, rhs: Item) -> Bool {
     case name
     
     case description
+    
+    case creationTime
     
   }
 
@@ -280,6 +312,10 @@ public static func == (lhs: Item, rhs: Item) -> Bool {
     
     
     self.description = try codecHelper.decode(String?.self, forKey: .description, container: &container)
+    
+    
+    
+    self.creationTime = try codecHelper.decode(Timestamp.self, forKey: .creationTime, container: &container)
     
     
   }
