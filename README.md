@@ -2,7 +2,7 @@
 
 ## Versions
 
-firebase-tools: 14.25.0<br>
+firebase-tools: 14.26.0<br>
 Firebase Data Connect for VSCode: v1.10.1
 
 ## Steps to reproduce
